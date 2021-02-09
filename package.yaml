@@ -51,3 +51,5 @@ tests:
     - genetic-algorithm
     - tasty
     - tasty-hunit
+    - random
+    - mtl
