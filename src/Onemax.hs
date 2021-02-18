@@ -5,10 +5,10 @@ module Onemax
       generateSolution,
       modifySolution,
       mixSolutions,
-      -- selectSolution
+      selectSolution
     ) where
 
-import Data.List (sortBy)
+import Data.List (sortBy, tails)
 import System.Random
 import Control.Monad.State.Lazy
 
@@ -17,7 +17,8 @@ data Configuration = Configuration { solutionSize :: Int,
                                      solutionModProbability :: Double,
                                      solutionSetSize :: Int,
                                      solutionMixProbability :: Double,
-                                     cutoff :: Int -- number of solutions to take from population in selection
+                                     cutoff :: Int, -- number of solutions to take from population in selection
+                                     maxIterations :: Int
                                    }
 type Solution = [Bool]
 
@@ -67,8 +68,8 @@ modifySolution c s = do
     where probM = solutionModProbability c
 
 
-mixSolutions :: Configuration -> Solution -> Solution -> State StdGen Solution
-mixSolutions c s1 s2 = do
+mixSolutions :: Configuration -> (Solution, Solution) -> State StdGen Solution
+mixSolutions c (s1, s2) = do
     rand <- randomProbability
     if rand < probMix then do
         position <- randomInt 0 (size - 1)
@@ -85,7 +86,18 @@ mixSolutions c s1 s2 = do
 
 selectSolution :: Configuration -> [Solution] -> State StdGen Solution
 selectSolution c set = do
-    let bestCandidates = take cut $ sortBy (\a b -> compare (cost a) (cost b)) set
+    let bestCandidates = take cut $ reverse $sortBy (\a b -> compare (cost a) (cost b)) set
     randIndx <- randomInt 0 (cut - 1)
     return $ bestCandidates!!randIndx
       where cut = cutoff c
+
+
+searchStep :: Configuration -> [Solution] -> State StdGen [Solution]
+searchStep conf set = do
+  bestSolutions <- replicateM setSize $ selectSolution conf set
+  let parentPairs = take setSize $ [(a, b) | (a: bs) <- tails bestSolutions, b <- bs]
+  newSolutions <- mapM (mixSolutions conf) parentPairs
+  mapM (modifySolution conf) newSolutions
+    where
+      setSize = solutionSetSize conf
+

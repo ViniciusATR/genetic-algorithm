@@ -8,7 +8,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 gen = mkStdGen 120
-conf = Configuration 4 0.99 0.99 6 0.99
+conf = Configuration 4 0.99 0.99 6 0.99 3 20
 
 main :: IO ()
 main = do
@@ -37,5 +37,5 @@ testSolutionModifier = testGroup "Testes de modificador de soluções"
 
 testSlutionMixer = testGroup "Teste de função de mistura de soluções"
                    [
-                    testCase "Mistura ocorre" (assertEqual "mistura ocorre" [True, True, True, False] (evalState (mixSolutions conf [True, True, True, True] [False, False, False, False]) gen))
+                    testCase "Mistura ocorre" (assertEqual "mistura ocorre" [True, True, True, False] (evalState (mixSolutions conf ([True, True, True, True], [False, False, False, False])) gen))
                    ]
