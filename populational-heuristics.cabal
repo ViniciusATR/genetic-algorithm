@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cd9abc16e45021cff8404fb069592d08e92f70ceb6bf6762d66c6b83025a1042
+-- hash: 725584426849a44e6802ef47cc4489f5159b27d4081b92de38f2f06046f19efc
 
-name:           genetic-algorithm
+name:           populational-heuristics
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/genetic-algorithm#readme>
-homepage:       https://github.com/ViniciusATR/genetic-algorithm#readme
-bug-reports:    https://github.com/ViniciusATR/genetic-algorithm/issues
+description:    Please see the README on GitHub at <https://github.com/githubuser/populational-heuristics#readme>
+homepage:       https://github.com/ViniciusATR/populational-heuristics#readme
+bug-reports:    https://github.com/ViniciusATR/populational-heuristics/issues
 author:         Vinicius Resende
 maintainer:     viniatresnde@gmail.com
 copyright:      2021 Vinicius Resende
@@ -23,14 +23,15 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/ViniciusATR/genetic-algorithm
+  location: https://github.com/ViniciusATR/populational-heuristics
 
 library
   exposed-modules:
       Lib
       Onemax
+      Pso
   other-modules:
-      Paths_genetic_algorithm
+      Paths_populational_heuristics
   hs-source-dirs:
       src
   build-depends:
@@ -39,30 +40,30 @@ library
     , random
   default-language: Haskell2010
 
-executable genetic-algorithm-exe
+executable populational-heuristics-exe
   main-is: Main.hs
   other-modules:
-      Paths_genetic_algorithm
+      Paths_populational_heuristics
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , genetic-algorithm
+    , populational-heuristics
   default-language: Haskell2010
 
-test-suite genetic-algorithm-test
+test-suite populational-heuristics-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_genetic_algorithm
+      Paths_populational_heuristics
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , genetic-algorithm
     , mtl
+    , populational-heuristics
     , random
     , tasty
     , tasty-hunit
