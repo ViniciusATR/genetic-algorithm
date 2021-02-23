@@ -12,13 +12,15 @@ import Data.List (sortBy, tails)
 import System.Random
 import Control.Monad.State.Lazy
 
-data Configuration = Configuration { solutionSize :: Int,
+data Configuration = Configuration {
+                                     randomSeed :: Int,
+                                     solutionSize :: Int,
+                                     maxIterations :: Int,
+                                     solutionSetSize :: Int,
+                                     cutoff :: Int, -- number of solutions to take from population in selection
                                      mutationProbability :: Double,
                                      solutionModProbability :: Double,
-                                     solutionSetSize :: Int,
-                                     solutionMixProbability :: Double,
-                                     cutoff :: Int, -- number of solutions to take from population in selection
-                                     maxIterations :: Int
+                                     solutionMixProbability :: Double
                                    }
 type Solution = [Bool]
 
@@ -101,3 +103,15 @@ searchStep conf set = do
     where
       setSize = solutionSetSize conf
 
+search :: Configuration -> Solution
+search conf = head $ evalState (search' conf initSet 0) initGen
+  where
+    initGen = mkStdGen $ randomSeed conf
+    initSet = evalState (replicateM setSize (generateSolution conf)) initGen
+    setSize = solutionSetSize conf
+    maxIter = maxIterations conf
+    search' conf currSet currIter
+      | maxIter <= currIter = return currSet
+      | otherwise = do
+          nextSet <- searchStep conf currSet
+          search' conf nextSet (currIter + 1)

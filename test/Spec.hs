@@ -8,15 +8,15 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 gen = mkStdGen 120
-conf = Configuration 4 0.99 0.99 6 0.99 3 20
+conf = Configuration 120 4 20 10 2 0.99 0.99 0.99
+initSet = evalState (replicateM 10 $ generateSolution conf) gen
 
 main :: IO ()
 main = do
   defaultMain onemaxTests
 
 
-onemaxTests = testGroup "Testes do Onemax" [ testCost , testGenerator, testSolutionModifier]
--- testSolutionMixer testSolutionSelector ])
+onemaxTests = testGroup "Testes do GA com Onemax" [ testCost , testGenerator, testSolutionModifier, testSolutionMixer, testSolutionSelector]
 
 testCost = testGroup "Testes de função de custo"
            [
@@ -35,7 +35,13 @@ testSolutionModifier = testGroup "Testes de modificador de soluções"
                         testCase "Modificar solução" (assertEqual "modificar Solução" [False, True, False, True] (evalState (modifySolution conf [True, False, True, False] ) gen))
                        ]
 
-testSlutionMixer = testGroup "Teste de função de mistura de soluções"
+testSolutionMixer = testGroup "Teste de função de mistura de soluções"
                    [
                     testCase "Mistura ocorre" (assertEqual "mistura ocorre" [True, True, True, False] (evalState (mixSolutions conf ([True, True, True, True], [False, False, False, False])) gen))
                    ]
+
+testSolutionSelector = testGroup "Teste de função de seletor de soluções"
+                       [
+                        testCase "Seleciona uma entre 10"(assertEqual "seleciona uma" [True, True, True, False]
+                                                          (evalState (selectSolution conf initSet) gen))
+                       ]
