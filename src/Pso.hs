@@ -25,7 +25,7 @@ data Configuration = Configuration {
 -- função de seno com amplitude reduzindo conforme X aumenta
 -- muitos máximos locais
 cost :: Double -> Double
-cost x = (1/(1 + x)) * sin((2*pi*x))
+cost x = (1/(1 + x)) * sin(2*pi*x)
 
 
 randomState :: (StdGen -> (a, StdGen)) -> State StdGen a
@@ -83,7 +83,7 @@ modifySolution conf gbx (cx, bx, cv) = do
 
 
 getBestPosition :: [Solution] -> Double
-getBestPosition set = foldr (\(_,x,_) y -> if cost x > cost y then x else y) 0 set
+getBestPosition = foldr (\(_,x,_) y -> if cost x > cost y then x else y) 0
 
 
 search :: Configuration -> Double
