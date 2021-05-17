@@ -10,6 +10,7 @@ module Onemax
 
 import Data.List (sortBy, tails)
 import System.Random
+import RandomTools
 import Control.Monad.State.Lazy
 
 data Configuration = Configuration {
@@ -26,26 +27,6 @@ type Solution = [Bool]
 
 cost :: Solution -> Int
 cost s = length (filter id s)
-
-
-randomState :: (StdGen -> (a, StdGen)) -> State StdGen a
-randomState randonFunction = do
-    s <- get
-    let (a, s') = randonFunction s
-    put s'
-    return a
-
-
-randomBool :: State StdGen Bool
-randomBool = randomState $ randomR (True, False)
-
-
-randomProbability :: State StdGen Double
-randomProbability = randomState $ randomR (0.0::Double, 1.0::Double)
-
-
-randomInt :: Int -> Int -> State StdGen Int
-randomInt min max = randomState $ randomR (min::Int, max::Int)
 
 
 generateSolution :: Configuration -> State StdGen Solution

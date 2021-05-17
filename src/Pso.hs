@@ -3,6 +3,7 @@ module Pso (
   ) where
 
 import System.Random
+import RandomTools
 import Control.Monad.State.Lazy
 
 --           CurrPosition   BestPosition CurrVelocity
@@ -26,22 +27,6 @@ data Configuration = Configuration {
 -- muitos máximos locais
 cost :: Double -> Double
 cost x = (1/(1 + x)) * sin(2*pi*x)
-
-
-randomState :: (StdGen -> (a, StdGen)) -> State StdGen a
-randomState randonFunction = do
-    s <- get
-    let (a, s') = randonFunction s
-    put s'
-    return a
-
-
-randomProbability :: State StdGen Double
-randomProbability = randomState $ randomR (0.0::Double, 1.0::Double)
-
-
-randomDouble :: Double -> Double -> State StdGen Double
-randomDouble min max = randomState $ randomR (min::Double, max::Double)
 
 
 generateSolution :: Configuration -> State StdGen Solution
