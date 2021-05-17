@@ -27,6 +27,7 @@ library:
   dependencies:
     - random
     - mtl
+    - containers
 
 executables:
   populational-heuristics-exe:
@@ -53,3 +54,4 @@ tests:
     - tasty-hunit
     - random
     - mtl
+    - containers
