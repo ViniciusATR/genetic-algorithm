@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bae7bc7cb358a34bbc8ea45455551a9a64258ba62aca48bcf8872fd08dfa681e
+-- hash: f492150c96ca55f850d07de8bcfdf7dcfe7f199481b084c96579f59ab48a212c
 
 name:           populational-heuristics
 version:        0.1.0.0
@@ -30,8 +30,10 @@ library
       ContinuousGA
       Lib
       Onemax
+      OptAINet
       Pso
       RandomTools
+      Utils
   other-modules:
       Paths_populational_heuristics
   hs-source-dirs:

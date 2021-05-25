@@ -65,8 +65,11 @@ shuffle xs = randomState $ fisherYates xs
 randomWeightedChoice :: [(a, Double)] -> State StdGen a
 randomWeightedChoice sample = do
   shuffled <- shuffle sample
-  cutoff <- randomProbability
-  let chosen = head $ dropWhile ((<=cutoff) . snd) shuffled
+  let weights = map snd sample
+  let minWeight = minimum weights
+  let maxWeight = maximum weights
+  cutoff <- randomDouble minWeight maxWeight
+  let chosen = head $ dropWhile ((<cutoff) . snd) shuffled
   return $ fst chosen
 
 

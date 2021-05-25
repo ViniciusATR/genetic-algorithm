@@ -2,9 +2,10 @@ module ContinuousGA (
 
   ) where
 
-import Data.List ( sortBy, sort, tails )
+import Data.List ( sortBy, minimumBy, sort, tails )
 import System.Random
 import RandomTools
+import Utils (rastriginCost)
 import Control.Monad.State.Lazy
 
 
@@ -26,16 +27,6 @@ type CostFunction = Solution -> Double
 type Solution = [Double]
 type Selector = Configuration -> [Solution] -> State StdGen Solution
 
--- Função de rastrigin para vetores n dimensionais
--- Com o número 10 e x entre [-5.12, 5.12] tem mínimo em
--- x = 0 com f(x) = 0
--- O sinal é alterado para continuar um problema de maximização
-rastriginCost :: CostFunction
-rastriginCost xs = - ( 10 * n + cumsum )
-  where
-    n = fromIntegral $ length xs
-    inner = map (\x -> x^2 - 10 * (cos 2 * pi * x)) xs
-    cumsum = sum inner
 
 
 generateSolution :: Configuration -> State StdGen Solution
@@ -89,9 +80,15 @@ mixSolutions c (s1, s2) = do
       size = solutionSize c
 
 
+getBestSolution :: Configuration -> [Solution] -> Solution
+getBestSolution conf = minimumBy (\a b -> compare (cost a) (cost b))
+  where
+    cost = fitness conf
+
+
 elitistSelection :: Selector
 elitistSelection c set = do
-    let bestCandidates = take cut $ reverse $sortBy (\a b -> compare (cost a) (cost b)) set
+    let bestCandidates = take cut $ sortBy (\a b -> compare (cost a) (cost b)) set
     randIndx <- randomInt 0 (cut - 1)
     return $ bestCandidates!!randIndx
       where
@@ -101,16 +98,16 @@ elitistSelection c set = do
 
 rouletteSelection :: Selector
 rouletteSelection c set = do
-  let fitness = sort $ map (abs . rastriginCost) set
+  let fitness = map rastriginCost set
   let cumsum  = sum fitness
-  let roulette = scanl1 (+) $ map (/cumsum) fitness
+  let roulette =  map (\x -> 1.0 - x/cumsum) fitness
   randomWeightedChoice $ zip set roulette
 
 
 tournamentSelection :: Selector
 tournamentSelection c set = do
   participants <- replicateM size $ sample set
-  return $ last $ scanl1 (\x y -> if cost x > cost y then x else y) participants
+  return $ last $ scanl1 (\x y -> if cost x < cost y then x else y) participants
     where
       size = cutoff c
       cost = fitness c
@@ -128,7 +125,7 @@ searchStep conf set = do
 
 
 search :: Configuration -> Solution
-search conf = head $ evalState (search' conf initSet 0) initGen
+search conf = getBestSolution conf $ evalState (search' conf initSet 0) initGen
   where
     initGen = mkStdGen $ randomSeed conf
     initSet = evalState (replicateM setSize (generateSolution conf)) initGen

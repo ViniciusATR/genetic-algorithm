@@ -1,6 +1,7 @@
 module Main where
 
 import Onemax
+import Utils (rastriginCost)
 
 import System.Random
 import Control.Monad.State.Lazy
@@ -13,15 +14,16 @@ initSet = evalState (replicateM 10 $ generateSolution conf) gen
 
 main :: IO ()
 main = do
-  defaultMain onemaxTests
+  defaultMain completeTests
 
 
-onemaxTests = testGroup "Testes do GA com Onemax" [ testCost , testGenerator, testSolutionModifier, testSolutionMixer, testSolutionSelector]
+completeTests = testGroup "Testes" [ testCost , testGenerator, testSolutionModifier, testSolutionMixer, testSolutionSelector]
 
 testCost = testGroup "Testes de função de custo"
            [
             testCase "Solução simples" (assertEqual "Solução simples" 5 (cost [True, True, True, False, True, False, True])),
-            testCase "Tudo falso" (assertEqual "Tudo falso" 0 (cost [False, False, False]))
+            testCase "Tudo falso" (assertEqual "Tudo falso" 0 (cost [False, False, False])),
+            testCase "Rastrigin tem ótimo em (0,0)" (assertEqual "ótimo" 0.0 (rastriginCost [0.0, 0.0]))
            ]
 
 
@@ -45,3 +47,4 @@ testSolutionSelector = testGroup "Teste de função de seletor de soluções"
                         testCase "Seleciona uma entre 10"(assertEqual "seleciona uma" [True, True, True, False]
                                                           (evalState (selectSolution conf initSet) gen))
                        ]
+
