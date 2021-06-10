@@ -13,7 +13,7 @@ module RandomTools(
 
 
 import System.Random
-import Control.Monad.State.Lazy
+import Control.Monad.State.Strict
 import qualified Data.Map as M
 
 randomState :: (StdGen -> (a, StdGen)) -> State StdGen a

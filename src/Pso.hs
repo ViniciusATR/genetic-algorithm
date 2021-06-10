@@ -6,7 +6,7 @@ module Pso (
 import Data.List (minimumBy)
 import System.Random
 import RandomTools
-import Control.Monad.State.Lazy
+import Control.Monad.State.Strict
 import Utils (rastriginCost)
 
 --           CurrPosition   BestPosition CurrVelocity

@@ -10,7 +10,7 @@ import Data.List ( sortBy, minimumBy, sort, tails )
 import System.Random
 import RandomTools
 import Utils (rastriginCost)
-import Control.Monad.State.Lazy
+import Control.Monad.State.Strict
 
 
 data Configuration = Configuration {

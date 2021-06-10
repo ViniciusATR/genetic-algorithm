@@ -11,7 +11,7 @@ module Onemax
 import Data.List (sortBy, tails)
 import System.Random
 import RandomTools
-import Control.Monad.State.Lazy
+import Control.Monad.State.Strict
 
 data Configuration = Configuration {
                                      randomSeed :: Int,
