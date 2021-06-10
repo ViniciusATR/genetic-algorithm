@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 594f1bdff209b3f1d07f07cb57b5b6da20518fe25e21f696ca1d0f44d520f17a
+-- hash: 22fcc92e6116757e0f0fd355848c43730fee38cb8b0fadeb0fd1422ccdbfa966
 
 name:           populational-heuristics
 version:        0.1.0.0
@@ -52,7 +52,7 @@ executable run-ainet-exe
       Paths_populational_heuristics
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       base >=4.7 && <5
     , populational-heuristics
@@ -65,7 +65,7 @@ executable run-ga-exe
       Paths_populational_heuristics
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       base >=4.7 && <5
     , populational-heuristics
@@ -78,7 +78,7 @@ executable run-pso-exe
       Paths_populational_heuristics
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       base >=4.7 && <5
     , populational-heuristics
