@@ -30,8 +30,26 @@ library:
     - containers
 
 executables:
-  populational-heuristics-exe:
-    main:                Main.hs
+  run-ga-exe:
+    main:                runGA.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - populational-heuristics
+  run-pso-exe:
+    main:                runPSO.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - populational-heuristics
+  run-ainet-exe:
+    main:                runOptAi.hs
     source-dirs:         app
     ghc-options:
     - -threaded

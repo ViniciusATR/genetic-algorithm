@@ -1,5 +1,9 @@
 module ContinuousGA (
-
+  Configuration (..),
+  rouletteSelection,
+  tournamentSelection,
+  elitistSelection,
+  search
   ) where
 
 import Data.List ( sortBy, minimumBy, sort, tails )

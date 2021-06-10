@@ -1,5 +1,6 @@
 module Pso (
-
+  Configuration (..),
+  search
   ) where
 
 import Data.List (minimumBy)

@@ -1,5 +1,6 @@
 module OptAINet (
-
+  Configuration (..),
+  search
   ) where
 
 import Data.List ( groupBy, sortBy, minimumBy, sort, tails )

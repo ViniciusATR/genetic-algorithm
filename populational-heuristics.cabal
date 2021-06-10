@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f492150c96ca55f850d07de8bcfdf7dcfe7f199481b084c96579f59ab48a212c
+-- hash: 594f1bdff209b3f1d07f07cb57b5b6da20518fe25e21f696ca1d0f44d520f17a
 
 name:           populational-heuristics
 version:        0.1.0.0
@@ -45,9 +45,36 @@ library
     , random
   default-language: Haskell2010
 
-executable populational-heuristics-exe
-  main-is: Main.hs
+executable run-ainet-exe
+  main-is: runOptAi.hs
   other-modules:
+      Main
+      Paths_populational_heuristics
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , populational-heuristics
+  default-language: Haskell2010
+
+executable run-ga-exe
+  main-is: runGA.hs
+  other-modules:
+      Main
+      Paths_populational_heuristics
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , populational-heuristics
+  default-language: Haskell2010
+
+executable run-pso-exe
+  main-is: runPSO.hs
+  other-modules:
+      Main
       Paths_populational_heuristics
   hs-source-dirs:
       app
