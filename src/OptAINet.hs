@@ -50,24 +50,26 @@ getBestSolution conf = minimumBy (\a b -> compare (cost a) (cost b))
   where
     cost = fitness conf
 
-mutate :: Double -> Solution -> State StdGen Solution
-mutate alpha = mapM (mutate' alpha)
+modifySolution :: Configuration -> Solution -> State StdGen Solution
+modifySolution conf sol = do
+  modVec <- replicateM size randomGaussian'
+  let alpha = (1.0/b) * exp (- cost sol)
+  return $ zipWith (\s r -> s + r * alpha) sol modVec
     where
-      mutate' alpha d = do
-        rand <- randomGaussian'
-        return $ d + rand * alpha
+      b = beta conf
+      cost = fitness conf
+      size = solutionSize conf
 
 cloneSelection :: Configuration -> Solution -> State StdGen Solution
 cloneSelection conf s = do
   let clones = replicate n s
   let alpha = (1.0/b) * exp (- cost s)
-  mutatedClones <- mapM (mutate alpha) clones
+  mutatedClones <- mapM (modifySolution conf) clones
   return $ getBestSolution conf mutatedClones ++ s
     where
       cost = fitness conf
       n = numClones conf
       b = beta conf
-
 
 trimAndRefill :: Configuration -> [Solution] -> State StdGen [Solution]
 trimAndRefill conf pop = do
