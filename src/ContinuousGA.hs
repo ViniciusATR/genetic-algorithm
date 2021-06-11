@@ -19,8 +19,7 @@ data Configuration = Configuration {
                                      maxIterations :: Int,
                                      solutionSetSize :: Int,
                                      cutoff :: Int, -- number of solutions to take from population in selection
-                                     mutationProbability :: Double,
-                                     mutationStandardDeviation :: Double,
+                                     learningRate :: Double,
                                      solutionModProbability :: Double,
                                      solutionMixProbability :: Double,
                                      selector :: Selector,
@@ -31,33 +30,23 @@ type CostFunction = Solution -> Double
 type Solution = [Double]
 type Selector = Configuration -> [Solution] -> State StdGen Solution
 
-
-
 generateSolution :: Configuration -> State StdGen Solution
 generateSolution c = replicateM n $ randomDouble (-5.12) 5.12
   where n = solutionSize c
 
-
-mutate :: Configuration -> Double -> State StdGen Double
-mutate c d = do
-  rand <- randomProbability
-  if rand < prob then
-    randomGaussian sd d
-  else
-    return d
-  where
-    prob = mutationProbability c
-    sd = mutationStandardDeviation c
-
-
 modifySolution :: Configuration -> Solution -> State StdGen Solution
 modifySolution c s = do
   rand <- randomProbability
-  if rand < probM then
-    mapM (mutate c) s
+  if rand < probM then do
+    modVec <- replicateM size randomGaussian'
+    return $ zipWith (\s r -> s + r * lr) s modVec
   else
     return s
-  where probM = solutionModProbability c
+  where
+      probM = solutionModProbability c
+      lr = learningRate c
+      cost = fitness c
+      size = solutionSize c
 
 
 aritMix :: Int -> (Solution, Solution) -> State StdGen Solution
