@@ -7,8 +7,12 @@ main :: IO ()
 main = do
   args <- getArgs
   let solutionSize = read $ head args :: Int
-  let maxIterations = read $ args!!1 :: Int
-  let conf = Configuration 42 solutionSize maxIterations 20 1.0 1.0 1.0 (-5.12) 5.12
+  let seed = read $ args!!1
+  let maxIterations = read $ args!!2 :: Int
+  let gbias = read $ args!!3 :: Double
+  let lbias = read $ args!!4 ::Double
+  let popSize = div 10000 maxIterations
+  let conf = Configuration seed solutionSize maxIterations popSize 1.0 gbias lbias (-5.12) 5.12
   let result = search conf
   print result
   let cost = rastriginCost result

@@ -19,7 +19,6 @@ data Configuration = Configuration {
                                      maxIterations :: Int,
                                      solutionSetSize :: Int,
                                      cutoff :: Int, -- number of solutions to take from population in selection
-                                     learningRate :: Double,
                                      solutionModProbability :: Double,
                                      solutionMixProbability :: Double,
                                      selector :: Selector,
@@ -39,12 +38,12 @@ modifySolution c s = do
   rand <- randomProbability
   if rand < probM then do
     modVec <- replicateM size randomGaussian'
-    return $ zipWith (\s r -> s + r * lr) s modVec
+    alpha  <- randomProbability
+    return $ zipWith (\s r -> s + r * alpha) s modVec
   else
     return s
   where
       probM = solutionModProbability c
-      lr = learningRate c
       cost = fitness c
       size = solutionSize c
 
