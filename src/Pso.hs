@@ -26,11 +26,6 @@ data Configuration = Configuration {
                                    }
 
 
--- função de seno com amplitude reduzindo conforme X aumenta
--- muitos máximos locais
-cost :: Double -> Double
-cost x = (1/(1 + x)) * sin(2*pi*x)
-
 
 generateSolution :: Configuration -> State StdGen Solution
 generateSolution conf = do
