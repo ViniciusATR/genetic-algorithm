@@ -14,6 +14,5 @@ main = do
   let popSize = div 10000 maxIterations
   let conf = Configuration seed solutionSize maxIterations popSize 1.0 gbias lbias (-5.12) 5.12
   let result = search conf
-  print result
   let cost = rastriginCost result
   print cost

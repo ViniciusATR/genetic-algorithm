@@ -19,6 +19,5 @@ main = do
            | selection == "tournament" = Configuration seed solutionSize maxIterations popSize cutoff mutationProb crossoverProb tournamentSelection rastriginCost
            | otherwise = Configuration seed solutionSize maxIterations popSize cutoff mutationProb crossoverProb tournamentSelection rastriginCost
   let result = search conf
-  print result
   let cost = rastriginCost result
   print cost

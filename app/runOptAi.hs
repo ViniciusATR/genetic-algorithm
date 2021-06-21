@@ -16,6 +16,5 @@ main = do
   let randomAdd = round $ fromIntegral popSize * randomAddPercent
   let conf = Configuration seed solutionSize maxIterations popSize 10 randomAdd fitThresh beta rastriginCost
   let result = search conf
-  print result
   let cost = rastriginCost result
   print cost
