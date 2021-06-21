@@ -3,7 +3,7 @@ module OptAINet (
   search
   ) where
 
-import Data.List ( groupBy, sortBy, minimumBy, sort, tails )
+import Data.List ( groupBy, sortBy, minimumBy, maximumBy,sort, tails )
 import System.Random
 import RandomTools
 import Utils (rastriginCost)
@@ -24,8 +24,6 @@ data Configuration = Configuration {
 
 type CostFunction = Solution -> Double
 type Solution = [Double]
-type Selector = Configuration -> [Solution] -> State StdGen Solution
-
 
 
 generateSolution :: Configuration -> State StdGen Solution
@@ -50,26 +48,29 @@ getBestSolution conf = minimumBy (\a b -> compare (cost a) (cost b))
   where
     cost = fitness conf
 
-modifySolution :: Configuration -> Solution -> State StdGen Solution
-modifySolution conf sol = do
+getWorstSolution :: Configuration -> [Solution] -> Solution
+getWorstSolution conf = maximumBy (\a b -> compare (cost a) (cost b))
+  where
+    cost = fitness conf
+
+modifySolution :: Configuration -> Double -> Solution -> State StdGen Solution
+modifySolution conf bestCost sol = do
   modVec <- replicateM size randomGaussian'
-  let alpha = (1.0/b) * exp (- cost sol)
+  let normalizedCost = 1.0 - cost sol/bestCost
+  let alpha = (1.0/b) * exp (- normalizedCost)
   return $ zipWith (\s r -> s + r * alpha) sol modVec
     where
       b = beta conf
       cost = fitness conf
       size = solutionSize conf
 
-cloneSelection :: Configuration -> Solution -> State StdGen Solution
-cloneSelection conf s = do
-  let clones = replicate n s
-  let alpha = (1.0/b) * exp (- cost s)
-  mutatedClones <- mapM (modifySolution conf) clones
-  return $ getBestSolution conf mutatedClones ++ s
+cloneSelection :: Configuration -> Double -> Solution -> State StdGen Solution
+cloneSelection conf bestCost s = do
+  mutatedClones <- replicateM n (modifySolution conf bestCost s)
+  return $ getBestSolution conf (mutatedClones ++ [s])
     where
       cost = fitness conf
       n = numClones conf
-      b = beta conf
 
 trimAndRefill :: Configuration -> [Solution] -> State StdGen [Solution]
 trimAndRefill conf pop = do
@@ -84,7 +85,8 @@ trimAndRefill conf pop = do
 searchStep :: Configuration -> [Solution] -> State StdGen [Solution]
 searchStep conf pop = do
   let currAvg = avgCost conf pop
-  newGen <- mapM (cloneSelection conf) pop
+  let currBest = getBestSolution conf pop
+  newGen <- mapM (cloneSelection conf (cost currBest)) pop
   let newAvg = avgCost conf newGen
   if newAvg < currAvg then do
     return newGen
